@@ -1,0 +1,9 @@
+# Configuration for remote A2A agents
+# Add or remove agents dynamically without changing code
+
+remote_agents:
+  - name: "calculator_agent"
+    description: "A calculator agent that performs mathematical calculations and unit conversions"
+    # REPLACE WITH YOUR CLOUD RUN URL
+    agent_card_url: "https://<YOUR_CLOUD_RUN_URL>/.well-known/agent-card.json"
+    enabled: true
