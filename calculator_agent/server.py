@@ -1,6 +1,7 @@
-"""Calculator Agent A2A Server."""
+"""Calculator Agent A2A Server with 3-Legged OAuth support."""
 
 import os
+import asyncio
 from pathlib import Path
 from dotenv import load_dotenv
 from urllib.parse import urlparse
@@ -11,43 +12,55 @@ from .agent import root_agent
 env_path = Path(__file__).parent.parent / '.env'
 if env_path.exists():
     load_dotenv(env_path)
-    print(f"Loaded .env from {env_path}")
 
-# 1. Get the port (Cloud Run uses 8080, local uses 9001)
-env_port = int(os.environ.get("PORT", 9001))
+# --- A2A OAuth Security Configuration (3-Legged OAuth) ---
+from a2a.types import OAuth2SecurityScheme, OAuthFlows, AuthorizationCodeOAuthFlow
+from google.adk.a2a.utils.agent_card_builder import AgentCardBuilder
 
-# 2. Extract configuration from BASE_URL
-# This is crucial for Cloud Run so the Agent Card doesn't say 'localhost'
-base_url = os.environ.get("BASE_URL")
-host = "localhost"
-protocol = "http"
-broadcast_port = env_port
+# Define the OAuth2 security scheme for Authorization Code Flow (triggers popups)
+oauth_scheme = OAuth2SecurityScheme(
+    description="Enterprise OAuth2 Authentication (3-Legged)",
+    flows=OAuthFlows(
+        authorization_code=AuthorizationCodeOAuthFlow(
+            authorization_url="https://accounts.google.com/o/oauth2/auth",
+            token_url="https://oauth2.googleapis.com/token",
+            scopes={
+                "https://www.googleapis.com/auth/cloud-platform": "Full access to GCP resources"
+            }
+        )
+    )
+)
 
-if base_url:
-    parsed = urlparse(base_url)
-    host = parsed.hostname
-    protocol = parsed.scheme
-    # Cloud Run handles the port mapping, so we usually broadcast 
-    # the protocol's default port (443 for https) unless explicitly stated.
-    if parsed.port:
-        broadcast_port = parsed.port
-    elif protocol == "https":
-        broadcast_port = 443
-    else:
-        broadcast_port = 80
-    print(f"🔧 Configured Agent Card for public URL: {protocol}://{host}:{broadcast_port}")
+async def build_card(port):
+    base_url = os.environ.get("BASE_URL", f"http://localhost:{port}")
+    rpc_url = f"{base_url.rstrip('/')}/rpc"
+    
+    # Initialize builder with absolute RPC URL
+    builder = AgentCardBuilder(agent=root_agent, rpc_url=rpc_url)
+    card = await builder.build() 
+    
+    # Attach security requirements to trigger the ADK Auth Flow (Popup)
+    card.security_schemes = {"google_oauth": oauth_scheme}
+    card.security = [{"google_oauth": ["https://www.googleapis.com/auth/cloud-platform"]}]
+    return card
 
-# 3. Create the A2A app.
-# We pass the broadcast_port here so it shows up in the Agent Card.
+# Get the port from environment
+port = int(os.environ.get("PORT", 8080))
+
+# Initialize the async card building
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
+agent_card = loop.run_until_complete(build_card(port))
+
+# Create the A2A app
 a2a_app = to_a2a(
     agent=root_agent, 
-    host=host,
-    port=broadcast_port,
-    protocol=protocol
+    host=urlparse(os.environ.get("BASE_URL", "http://localhost")).hostname or "localhost",
+    port=port,
+    agent_card=agent_card
 )
 
 if __name__ == '__main__':
     import uvicorn
-    # Use the actual environment port for the server to listen on
-    print(f"Starting Calculator Agent on port {env_port}")
-    uvicorn.run(a2a_app, host='0.0.0.0', port=env_port)
+    print(f"Starting Calculator Agent on port {port} (Scenario 2 - 3-Legged OAuth)")
+    uvicorn.run(a2a_app, host='0.0.0.0', port=port)

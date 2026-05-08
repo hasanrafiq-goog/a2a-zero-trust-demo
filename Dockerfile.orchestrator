@@ -1,0 +1,24 @@
+# Dockerfile for Orchestrator Agent
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the whole project (needed for orchestrator to find config and agent modules)
+COPY . .
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=True
+ENV PORT=8080
+
+# Expose the port for the ADK UI
+EXPOSE 8080
+
+# Command to run the ADK Web Server for the Orchestrator
+# We use --host 0.0.0.0 and the PORT env var for Cloud Run compatibility
+CMD ["adk", "web", "--host", "0.0.0.0", "--port", "8080", "orchestrator_agent"]
