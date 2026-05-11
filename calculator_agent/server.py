@@ -33,7 +33,9 @@ oauth_scheme = OAuth2SecurityScheme(
 
 async def build_card(port):
     base_url = os.environ.get("BASE_URL", f"http://localhost:{port}")
-    rpc_url = f"{base_url.rstrip('/')}/rpc"
+    # FIXED: The default RPC route in A2A Starlette apps is actually '/' 
+    # not '/rpc'. So we must broadcast the correct path in the Agent Card.
+    rpc_url = f"{base_url.rstrip('/')}/"
     
     # Initialize builder with absolute RPC URL
     builder = AgentCardBuilder(agent=root_agent, rpc_url=rpc_url)
