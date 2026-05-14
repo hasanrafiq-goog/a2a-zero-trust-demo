@@ -1,24 +1,26 @@
-# Use an official Python runtime as a parent image
+# Dockerfile for Orchestrator Agent
 FROM python:3.11-slim
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements file
+# Copy requirements
 COPY requirements.txt .
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the project code
+# Copy the whole project
 COPY . .
 
-# Set environment variables for Cloud Run
+# Set environment variables
 ENV PYTHONUNBUFFERED=True
 ENV PORT=8080
+# Ensure /app is in the python path
+ENV PYTHONPATH=/app
 
-# Expose the port
+# Expose the port for the ADK UI
 EXPOSE 8080
 
-# Run the calculator agent server
-CMD ["python", "-m", "calculator_agent.server"]
+# Command to run the ADK Web Server
+# Removing the explicit "orchestrator_agent" argument so it scans the current directory (/app) for all agents.
+CMD ["adk", "web", "--host", "0.0.0.0", "--port", "8080"]
