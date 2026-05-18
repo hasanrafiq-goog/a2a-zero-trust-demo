@@ -5,5 +5,5 @@ remote_agents:
   - name: "calculator_agent"
     description: "A calculator agent that performs mathematical calculations and unit conversions"
     # REPLACE WITH YOUR CLOUD RUN URL
-    agent_card_url: "https://calculator-agent-318948681665.us-central1.run.app/.well-known/agent-card.json"
+    agent_card_url: "https://calculator-agent-290505781529.us-central1.run.app/.well-known/agent-card.json"
     enabled: true
