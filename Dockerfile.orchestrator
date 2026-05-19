@@ -1,16 +1,6 @@
 # Dockerfile for Orchestrator Agent
 FROM python:3.11-slim
 
-# Install necessary system dependencies for gcloud
-RUN apt-get update && \
-    apt-get install -y curl apt-transport-https ca-certificates gnupg python3 && \
-    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
-    apt-get update && \
-    apt-get install -y google-cloud-cli && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
 # Copy requirements
@@ -30,5 +20,6 @@ ENV PYTHONPATH=/app
 # Expose the port for the ADK UI
 EXPOSE 8080
 
-# Command to run the ADK Web Server
-CMD ["adk", "web", "--host", "0.0.0.0", "--port", "8080"]
+# Command to run the Custom ADK Web Server (OAuth Flow)
+# If you switch back to IAP, you can revert this to CMD ["adk", "web", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["python", "orchestrator_agent/server.py"]

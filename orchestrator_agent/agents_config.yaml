@@ -1,9 +1,7 @@
-# Configuration for remote A2A agents
-# Add or remove agents dynamically without changing code
-
 remote_agents:
   - name: "calculator_agent"
-    description: "A calculator agent that performs mathematical calculations and unit conversions"
-    # REPLACE WITH YOUR CLOUD RUN URL
-    agent_card_url: "https://calculator-agent-290505781529.us-central1.run.app/.well-known/agent-card.json"
+    description: "An agent that can perform basic math operations and unit conversions"
+    # Pointing to the local file instead of the HTTP endpoint to bypass IAP during startup
+    # Use raw path, ADK does not support file:// protocol prefixes.
+    agent_card_url: "{base_dir}/calculator_card.json"
     enabled: true

@@ -1,0 +1,68 @@
+{
+  "additionalInterfaces": null,
+  "capabilities": {
+    "extensions": null,
+    "pushNotifications": null,
+    "stateTransitionHistory": null,
+    "streaming": null
+  },
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text/plain"
+  ],
+  "description": "Calculator agent for math operations and unit conversions",
+  "documentationUrl": null,
+  "iconUrl": null,
+  "name": "calculator_agent",
+  "preferredTransport": "JSONRPC",
+  "protocolVersion": "0.3.0",
+  "provider": null,
+  "security": null,
+  "securitySchemes": null,
+  "signatures": null,
+  "skills": [
+    {
+      "description": "Calculator agent for math operations and unit conversions \nI am a helpful calculator agent. I can:\n1. Perform mathematical calculations using the 'calculate' tool\n2. Convert between units using the 'convert_units' tool\n\nWhen a user asks for a calculation, use the calculate tool with the expression.\nWhen a user asks for unit conversion, use the convert_units tool with the value, from_unit, and to_unit.\n\nAlways provide clear and accurate results.\n    ",
+      "examples": [],
+      "id": "calculator_agent",
+      "inputModes": null,
+      "name": "model",
+      "outputModes": null,
+      "security": null,
+      "tags": [
+        "llm"
+      ]
+    },
+    {
+      "description": "Perform basic calculations.\n\nArgs:\n    expression: Mathematical expression to evaluate (e.g., \"2 + 2\", \"10 * 5\")\n\nReturns:\n    Result of the calculation",
+      "examples": null,
+      "id": "calculator_agent-calculate",
+      "inputModes": null,
+      "name": "calculate",
+      "outputModes": null,
+      "security": null,
+      "tags": [
+        "llm",
+        "tools"
+      ]
+    },
+    {
+      "description": "Convert between units.\n\nArgs:\n    value: Numeric value to convert\n    from_unit: Source unit (celsius, fahrenheit, km, miles)\n    to_unit: Target unit\n\nReturns:\n    Converted value",
+      "examples": null,
+      "id": "calculator_agent-convert_units",
+      "inputModes": null,
+      "name": "convert_units",
+      "outputModes": null,
+      "security": null,
+      "tags": [
+        "llm",
+        "tools"
+      ]
+    }
+  ],
+  "supportsAuthenticatedExtendedCard": false,
+  "url": "https://calculator-agent-290505781529.us-central1.run.app",
+  "version": "0.0.1"
+}
