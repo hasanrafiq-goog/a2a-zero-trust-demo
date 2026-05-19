@@ -1,7 +1,0 @@
-remote_agents:
-  - name: "calculator_agent"
-    description: "An agent that can perform basic math operations and unit conversions"
-    # Pointing to the local file instead of the HTTP endpoint to bypass IAP during startup
-    # Use raw path, ADK does not support file:// protocol prefixes.
-    agent_card_url: "{base_dir}/calculator_card.json"
-    enabled: true
