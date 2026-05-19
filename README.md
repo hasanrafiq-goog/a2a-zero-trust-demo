@@ -6,12 +6,12 @@ This repository contains Proof of Concept (POC) implementations for secure, cros
 
 We have explored and documented two primary architectural patterns for handling identity propagation in a Zero Trust environment.
 
-### 1. [Local-to-GCP Identity Flow](https://github.com/rafiqh/hsbc-a2a/tree/local-to-gcp)
+### 1. [Local-to-GCP Identity Flow](https://github.com/hasanrafiq-goog/a2a-zero-trust-demo/tree/local-to-gcp)
 *   **Target:** Local developers or on-prem services talking to Cloud Run.
 *   **Mechanism:** Uses Service Account OIDC tokens with specific Audiences to pass through Cloud Run's IAM-protected URLs.
 *   **Status:** Initial POC for infrastructure connectivity.
 
-### 2. [GCP-to-GCP Human Identity Delegation](https://github.com/rafiqh/hsbc-a2a/tree/gcp-to-gcp)
+### 2. [GCP-to-GCP Human Identity Delegation](https://github.com/hasanrafiq-goog/a2a-zero-trust-demo/tree/gcp-to-gcp)
 *   **Target:** Cross-project production environments (e.g., Bank-grade deployments).
 *   **Mechanism:** **Shared Identity Domain** using OIDC + OAuth.
 *   **Key Features:**
