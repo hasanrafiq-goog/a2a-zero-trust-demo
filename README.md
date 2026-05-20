@@ -28,7 +28,7 @@ This setup requires precise configuration in the Google Cloud Console across two
 
 ### Phase 1: Create the "Bank-Wide" OAuth Client (Project A)
 
-1.  Go to **Project A** (`hasanrafiq-test-331814`) -> APIs & Services -> Credentials.
+1.  Go to **Project A** (`<YOUR_PROJECT_A_ID>`) -> APIs & Services -> Credentials.
 2.  Create an **OAuth Client ID** (Web application).
 3.  Add the **IAP Redirect URI** to the "Authorized redirect URIs":
     `https://iap.googleapis.com/v1/oauth/clientIds/<YOUR_CLIENT_ID>:handleRedirect`
